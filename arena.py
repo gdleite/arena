@@ -13,12 +13,11 @@ def cpu_cansado():
   return i
   
 def cpu_AI():
-  acoes=['Defesa']*4+['Magia']*3+['Ataque']*10+['Esperar']*3
+  acoes=['Defesa']*5+['Magia']*3+['Ataque']*10+['Esperar']*2
   i=acoes[random.randint(0,19)]
   return i
   
 def ataque(ação_cpu):
-
   if ação_cpu=='Esperar':
     hp=0
     if arma=='Machado':
@@ -33,7 +32,6 @@ def ataque(ação_cpu):
       stamina_cpu=1
       stamina=-1
       hp_cpu=-dado(7)
-
   elif ação_cpu=='Defesa':
     hp=0
     if arma=='Machado':
@@ -48,9 +46,8 @@ def ataque(ação_cpu):
       stamina=-2
       stamina_cpu=1
       hp_cpu=-dado(5)
-
   elif ação_cpu=='Ataque':
-    hp=random.randint(1,4)
+    hp=-random.randint(1,4)
     if arma=='Machado':
       stamina_cpu=-1
       stamina=-1
@@ -63,23 +60,79 @@ def ataque(ação_cpu):
       stamina=-1
       stamina_cpu=-1
       hp_cpu=-dado(6)
-  return hp, hp_cpu, stamina, stamina_cpu
-
   else:
-    hp=random.randint(1,4)
+    if raca=='Mago':
+      hp=-random.randint(1,5)
+    else:
+      hp=-random.randint(1,8)      
     if arma=='Machado':
-      stamina_cpu=-1
+      stamina_cpu=0
       stamina=-1
-      hp_cpu=-dado(5)
+      hp_cpu=-dado(6)
     elif arma=='Lança':
-      stamina_cpu=-1
+      stamina_cpu=0
       stamina=-2
-      hp_cpu=-dado(7)
+      hp_cpu=-dado(9)
     else:
       stamina=-1
-      stamina_cpu=-1
-      hp_cpu=-dado(6)
-
+      stamina_cpu=0
+      hp_cpu=-dado(7)
+      
+  return hp, hp_cpu, stamina, stamina_cpu,0
+  
+def magia(ação_cpu):
+  stamina=0
+  if ação_cpu=='Esperar':
+    stamina_cpu=1
+    if raca=='Humano':
+      hp=dado(8)
+      hp_cpu=0
+    elif raca=='Ogro':
+      hp=0
+      hp_cpu=-dado(8)
+    else:
+      stamina=dado(4)
+      hp=0
+      hp_cpu=0
+  elif ação_cpu=='Defesa':
+    stamina_cpu=1
+    if raca=='Humano':
+      hp=dado(8)
+      hp_cpu=0
+    elif raca=='Ogro':
+      hp=0
+      hp_cpu=-dado(4)
+    else:
+      stamina=dado(4)
+      hp=0
+      hp_cpu=0
+  elif ação_cpu=='Ataque':
+    stamina_cpu=-1
+    if raca=='Humano':
+      hp=dado(8)-random.randint(1,5)
+      hp_cpu=0
+    elif raca=='Ogro':
+      hp=-random.randint(1,5)
+      hp_cpu=-dado(8)
+    else:
+      stamina=dado(4)
+      hp=-random.randint(1,5)
+      hp_cpu=0
+  else:
+    stamina_cpu=0
+    if raca=='Humano':
+      hp=dado(8)-random.randint(1,8)
+      hp_cpu=0
+    elif raca=='Ogro':
+      hp=-random.randint(1,8)
+      hp_cpu=-dado(8)
+    else:
+      stamina=dado(4)
+      hp=-random.randint(1,5)
+      hp_cpu=0
+    
+  return hp, hp_cpu, stamina, stamina_cpu, -1
+  
 
 
 def personagem():
@@ -124,40 +177,41 @@ def apresentaçao():
   print('')
   
 def combate():
+  turno=0
   stamina=2
   stamina_cpu=1
   hp=30
   hpcpu=30
-  while hpcpu <= 0 or hp <= 0:
-    ações=['A','M','D','E','a','m','d','e']
+  if raca=='Mago':
+    mana=3
+  else:
+    mana=1
+  ações=['A','M','D','E','a','m','d','e']
+  while hpcpu >= 0 and hp >= 0:
     ação=input('(A)TACAR, (M)AGIA, (E)SPERAR ou (D)EFESA?')
     while ação not in ações:
       ação=input('(A)TACAR, (M)AGIA, (E)SPERAR ou (D)EFESA?')
     while stamina <=0 and (ação=='A' or ação=='a'):
-      ação=input('Não tem energia suficiente para atacar, (D)EFESA, (E)SPERAR ou (M)AGIA?')
+      ação=input('Não tem energia suficiente para atacar, (D)EFESA, (E)SPERAR ou (M)AGIA?') 
     if stamina_cpu <= 0:
       ação_cpu=cpu_cansado()
     else:
       ação_cpu=cpu_AI()
+      
     if ação=='A' or ação=='a':
-      hpchange,hp_cpuchange,stachange,sta_cpuchange=ataque(ação_cpu)
-    elif ação=='Magia':
+      hpchange,hp_cpuchange,stachange,sta_cpuchange,mana_change=ataque(ação_cpu)
+    elif ação=='M' or ação=='m':
+      hpchange,hp_cpuchange,stachange,sta_cpuchange,mana_change=magia(ação_cpu)
+      
+    hp+=hpchange
+    stamina+=stachange
+    hpcpu+=hp_cpuchange
+    stamina_cpu+=sta_cpuchange
+    mana+=mana_change
+  
+
+      
           
 raca,arma,habilidade=personagem()
 apresentaçao()
-
-
-
-
-  
-
-
-
-  
-
-  
-  
-
-
-  
-  
+combate()

@@ -208,10 +208,7 @@ def combate():
     hpcpu+=hp_cpuchange
     stamina_cpu+=sta_cpuchange
     mana+=mana_change
-  
-
-      
-          
+         
 raca,arma,habilidade=personagem()
 apresentaçao()
 combate()

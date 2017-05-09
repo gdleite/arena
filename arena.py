@@ -35,17 +35,17 @@ def ataque(ação_cpu):
   elif ação_cpu=='Defesa':
     hp=0
     if arma=='Machado':
-      stamina_cpu=1
+      stamina_cpu=0
       stamina=-1
-      hp_cpu=-dado(4)
+      hp_cpu=-dado(3)
     elif arma=='Lança':
-      stamina_cpu=1
+      stamina_cpu=0
       stamina=-3
-      hp_cpu=-dado(6)
+      hp_cpu=-dado(5)
     else:
       stamina=-2
-      stamina_cpu=1
-      hp_cpu=-dado(5)
+      stamina_cpu=0
+      hp_cpu=-dado(4)
   elif ação_cpu=='Ataque':
     hp=-random.randint(1,4)
     if arma=='Machado':
@@ -61,7 +61,7 @@ def ataque(ação_cpu):
       stamina_cpu=-1
       hp_cpu=-dado(6)
   else:
-    if raca=='Mago':
+    if habilidade=='Magia':
       hp=-random.randint(1,5)
     else:
       hp=-random.randint(1,8)      
@@ -188,9 +188,9 @@ def combate():
     mana=1
   ações=['A','M','D','E','a','m','d','e']
   while hpcpu >= 0 and hp >= 0:
-    ação=input('(A)TACAR, (M)AGIA, (E)SPERAR ou (D)EFESA?')
+    ação=input('*************\n >(A)TACAR\n >(M)AGIA\n >(E)SPERAR\n >(D)EFESA\n*************')
     while ação not in ações:
-      ação=input('(A)TACAR, (M)AGIA, (E)SPERAR ou (D)EFESA?')
+      ação=input('*************\n >(A)TACAR\n >(M)AGIA\n >(E)SPERAR\n >(D)EFESA\n*************')
     while stamina <=0 and (ação=='A' or ação=='a'):
       ação=input('Não tem energia suficiente para atacar, (D)EFESA, (E)SPERAR ou (M)AGIA?') 
     if stamina_cpu <= 0:
